@@ -1,3 +1,9 @@
+export type UserName = {
+  firstName: string;
+  middleName: string;
+  lastName: string;
+};
+
 export type Guardian = {
   fatherName: string;
   fatherOccupation: string;
@@ -5,12 +11,6 @@ export type Guardian = {
   motherName: string;
   motherOccupation: string;
   motherContactNo: string;
-};
-
-export type UserName = {
-  firstName: string;
-  middleName: string;
-  lastName: string;
 };
 
 export type LocalGuargian = {
@@ -25,6 +25,7 @@ export type Student = {
   name: UserName;
   gender: 'male' | 'female';
   dateOfBirth: string;
+  email: string;
   contactNo: string;
   emergencyNo: string;
   bloodBroup?: 'A+ ' | 'A-' | 'B+' | 'B-' | 'AB+' | 'AB-' | 'O+' | 'O-';
@@ -32,6 +33,6 @@ export type Student = {
   permanentAddress: string;
   guardian: Guardian;
   localGuardian: LocalGuargian;
-  profileImage?: string;
-  isActive: 'active' | 'inActive';
+  profileImg?: string;
+  isActive: 'active' | 'blocked';
 };
