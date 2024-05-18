@@ -3,7 +3,7 @@ import { StudentServices } from './student.service';
 
 const createStudent = async (req: Request, res: Response) => {
   try {
-    const { student: studentData } = req.body.student;
+    const { student: studentData } = req.body;
 
     const result = await StudentServices.createStudentIntoDb(studentData);
 
@@ -13,7 +13,11 @@ const createStudent = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (err) {
-    console.log(err);
+    res.status(500).json({
+      success: false,
+      message: 'something went wrong',
+      error: err,
+    });
   }
 };
 
