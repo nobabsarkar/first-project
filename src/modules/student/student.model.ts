@@ -7,8 +7,6 @@ import {
   TUserName,
 } from './student.interface';
 import validator from 'validator';
-import bcrypt = require('bcrypt');
-import config from '../../app/config';
 
 const userNameSchema = new Schema<TUserName>({
   firstName: {
@@ -90,10 +88,12 @@ const localGuardianSchema = new Schema<TLocalGuargian>({
 
 const studentSchema = new Schema<TStudent, StudentModel>({
   id: { type: String, require: [true, 'ID is required'], unique: true },
-  password: {
-    type: String,
-    require: [true, 'Password is required'],
-    maxlength: [20, 'Password can not be more than 20 characters'],
+
+  user: {
+    type: Schema.Types.ObjectId,
+    required: [true, 'ID is required'],
+    unique: true,
+    ref: 'User',
   },
   name: {
     type: userNameSchema,
@@ -135,39 +135,14 @@ const studentSchema = new Schema<TStudent, StudentModel>({
     required: true,
   },
   profileImg: { type: String },
-  isActive: {
-    type: String,
-    enum: ['active', 'inActive'],
-    default: 'active',
-  },
   isDeleted: {
     type: Boolean,
     default: false,
   },
 });
 
-// pre save middleware / hook : will work on create() save()
-studentSchema.pre('save', async function (next) {
-  // console.log(this, 'pre hook : we will save the data');
-  // eslint-disable-next-line @typescript-eslint/no-this-alias
-  const user = this; // doc
-
-  // hashing password and save into DB
-  user.password = await bcrypt.hash(
-    user.password,
-    Number(config.bcrypt_salt_rounds),
-  );
-  next();
-});
-
-// post save middleware / hook
-studentSchema.post('save', function (doc, next) {
-  doc.password = '';
-  next();
-});
-
 // Query Middleware
-studentSchema.pre('find', function (next) {
+studentSchema.pre('findOne', function (next) {
   this.find({ isDeleted: { $ne: true } });
   next();
 });
@@ -177,11 +152,5 @@ studentSchema.statics.isUserExists = async function (id: string) {
   const existingUser = await Student.findOne({ id });
   return existingUser;
 };
-
-// creating a custom instance method
-// studentSchema.methods.isUserExists = async function (id: string) {
-//   const existingUser = await Student.findOne({ id });
-//   return existingUser;
-// };
 
 export const Student = model<TStudent, StudentModel>('Student', studentSchema);
