@@ -1,10 +1,12 @@
 import config from '../../app/config';
+import { AcademicSemester } from '../academicSemester/academicSemester.model';
 import { TStudent } from '../student/student.interface';
 import { Student } from '../student/student.model';
 import { TUser } from './user.interface';
 import { User } from './user.model';
+import { generateStudentId } from './user.utils';
 
-const createStudentIntoDb = async (password: string, studentData: TStudent) => {
+const createStudentIntoDb = async (password: string, payload: TStudent) => {
   // create a user object
   const userData: Partial<TUser> = {};
 
@@ -14,8 +16,17 @@ const createStudentIntoDb = async (password: string, studentData: TStudent) => {
 
   userData.role = 'student';
 
-  // set manually generated id
-  userData.id = '2030100001';
+  // find academic semester info
+  const admissionSemester = await AcademicSemester.findById(
+    payload.admissionSemester,
+  );
+
+  if (!admissionSemester) {
+    throw new Error();
+  }
+  // set generated id
+  userData.id = await generateStudentId(admissionSemester);
+  // userData.id = '10203040505';
 
   // create a user
   const newUser = await User.create(userData);
@@ -23,10 +34,10 @@ const createStudentIntoDb = async (password: string, studentData: TStudent) => {
   // create a student
   if (Object.keys(newUser).length) {
     // set id , _id as user
-    studentData.id = newUser.id;
-    studentData.user = newUser._id; // referance _id
+    payload.id = newUser.id;
+    payload.user = newUser._id; // referance _id
 
-    const newStudent = Student.create(studentData);
+    const newStudent = Student.create(payload);
     return newStudent;
   }
 };
