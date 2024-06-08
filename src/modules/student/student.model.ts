@@ -118,7 +118,7 @@ const studentSchema = new Schema<TStudent, StudentModel>({
     // },
   },
   contactNo: { type: String, required: true },
-  emergencyNo: { type: String, required: true },
+  emergencyContactNo: { type: String, required: true },
   bloodGroup: {
     type: String,
     enum: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'],
@@ -142,6 +142,10 @@ const studentSchema = new Schema<TStudent, StudentModel>({
   isDeleted: {
     type: Boolean,
     default: false,
+  },
+  academicDepartment: {
+    type: Schema.Types.ObjectId,
+    ref: 'AcademicDepartment',
   },
 });
 

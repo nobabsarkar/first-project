@@ -1,4 +1,4 @@
-import { TAcademicFaculty } from './academicFaculty.interface.interface';
+import { TAcademicFaculty } from './academicFaculty.interface';
 import { AcademicFaculty } from './academicFaculty.model';
 
 const createAcademicFacultyIntoDb = async (payLoad: TAcademicFaculty) => {
