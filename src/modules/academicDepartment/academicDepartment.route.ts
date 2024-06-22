@@ -7,15 +7,15 @@ const router = express.Router();
 
 router.post(
   '/create-academic-department',
-  validateRequest(
-    AcademicDepartmentValidation.createAcademicDepartmentValidationSchema,
-  ),
+  // validateRequest(
+  //   AcademicDepartmentValidation.createAcademicDepartmentValidationSchema,
+  // ),
   AcademicDepartmentControllers.createAcademicDepartment,
 );
 
 router.get(
   '/:departmentId',
-  AcademicDepartmentControllers.getAllAcademicDepartment,
+  AcademicDepartmentControllers.getSingleAcademicDepartment,
 );
 
 router.patch(

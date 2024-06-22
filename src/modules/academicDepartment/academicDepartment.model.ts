@@ -20,6 +20,7 @@ const academicDepartmentSchema = new Schema<TAcademicDepartment>(
   },
 );
 
+//
 academicDepartmentSchema.pre('save', async function (next) {
   const isDepertmentExist = await AcademicDepartment.findOne({
     name: this.name,
